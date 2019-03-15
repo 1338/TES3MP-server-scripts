@@ -67,7 +67,7 @@ function guildsystem.init()
 	-- /guild for guild commands
 	customCommandHooks.registerCommand('guild', guildsystem.commandHandle)
 	-- /gc for sending guild members a message (stands for guild chat)
-	customCommandHooks.registerCommand('gc', guildsystem.sendGuildMessae)
+	customCommandHooks.registerCommand('gc', guildsystem.sendGuildMessage)
 end
 
 -- handles commands for guild
