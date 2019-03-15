@@ -17,7 +17,7 @@ I won't consider this script production ready before 1.0.0. But you are free to 
 ## How to install
 1. Move guildsystem.lua to the same `home` as defined in your tes3mp-server(-default).cfg Example: `home = /mnt/storage/tes3mp/clients/0.7.0/keepers/CoreScripts`)
 
-2. Edit customScripts.lua and add:
+2. Edit `customScripts.lua` and add:
 `require('guildsystem')` to the end
 
 ## How to configure
