@@ -1,7 +1,13 @@
 jsonInterface = require("jsonInterface")
 guildsystem = {
 	config={
-		file = "guilds.json"
+		file = "guilds.json",
+		options = {
+			customOverhead = false, --enables `[guildname] usename` overhead
+			guildnameInNormalChat = false, --enables `[guildname] username` in normal chat
+			guildrankInGuildchat = false, -- enables `[guildrankname] username` in guild chat
+			shorthand = false -- enables `/g` with same usage as `/guild`
+		}
 	}
 }
 
@@ -14,7 +20,6 @@ function guildsystem.fileCheck(path)
 	return false
 end
 
--- loads guild file
 function guildsystem.load()
 	guildsystem.guilds = jsonInterface.load(guildsystem.config.file)
 	if guildsystem.guilds ~= nil then
@@ -23,11 +28,15 @@ function guildsystem.load()
 	return false
 end
 
--- saves guild file
 function guildsystem.save()
 	return jsonInterface.save(guildsystem.config.file, guildsystem.guilds)
 end
 
+function guildsystem.base(guildName)
+	local baseguild = {}
+
+	return baseguild
+end
 
 function guildsystem.getGuildsFile()
 	tes3mp.LogMessage(enumerations.log.INFO, "[guilds] using file path: " .. guildsystem.config.path)
@@ -58,29 +67,49 @@ function guildsystem.getGuildByName(guildname)
 	return false
 end
 
--- makes sure that the guild system Initializes correctly
 function guildsystem.init()
 	-- Need file for for jsonInterface and path for fileCheck
 	guildsystem.config.path = tes3mp.GetModDir() .. "/" .. guildsystem.config.file
 	-- attempt to load guilds into guildsystem.guilds (or create file if can not)
 	guildsystem.getGuildsFile()
-	-- /guild for guild commands
-	customCommandHooks.registerCommand('guild', guildsystem.commandHandle)
-	-- /gc for sending guild members a message (stands for guild chat)
-	customCommandHooks.registerCommand('gc', guildsystem.sendGuildMessage)
+
+	-- register command hooks
+	customCommandHooks.registerCommand("guild", guildsystem.commandHandler)
+	if guildsystem.config.options.shorthand then
+		customCommandHooks.registerCommand('gc', guildsystem.commandHandler)
+	end
+
+	-- register login handler for custom overheads
+	if guildsystem.config.options.customOverhead then
+		-- customEventHooks.registerHandler('On')
+	end
+
+	if guildsystem.config.options.guildnameInNormalChat then
+		-- customEventHooks.registerHandler('On')
+	end
+
+	if guildsystem.config.options.guildrankInGuildchat then
+		-- customEventHooks.registerHandler('On')
+	end
+
 end
 
--- handles commands for guild
-function guildsystem.commandHandle(pid, cmd)
-
+function guildsystem.switchDisplayName(pid)
+	tes3mp.SetName(pid, "[" .. color.Yellow .."guild" .. color.White .. "] " ..  Players[pid].name)
+	tes3mp.SendBaseInfo(pid)
 end
 
--- Only sends message to people in the same guild
-function guildsystem.sendGuildMessage(pid, cmd)
 
+function guildsystem.commandHandler(pid, cmd)
+	local command = cmd[1]
+
+	tes3mp.LogMessage(enumerations.log.INFO, tes3mp.GetName(pid))
+	local x = os.clock()
+	local s = 0
+	for i=1,100000 do s = s + i end
+	print(string.format("elapsed time: %.2f\n", os.clock() - x))
 end
 
--- makes the guild system functional after the server start
 customEventHooks.registerHandler("OnServerPostInit", guildsystem.init())
 
 return guildsystem
