@@ -5,7 +5,7 @@ guildsystem = {
 		options = {
 			customOverhead = false, --enables `[guildname] usename` overhead
 			guildnameInNormalChat = false, --enables `[guildname] username` in normal chat
-			guildrankInGuildchat = false, -- enables `[guildrankname] username` in guild chat
+			guildrankInGuildChat = false, -- enables `[guildrankname] username` in guild chat
 			shorthand = false -- enables `/g` with same usage as `/guild`
 		}
 	}
@@ -88,7 +88,7 @@ function guildsystem.init()
 		-- customEventHooks.registerHandler('On')
 	end
 
-	if guildsystem.config.options.guildrankInGuildchat then
+	if guildsystem.config.options.guildrankInGuildChat then
 		-- customEventHooks.registerHandler('On')
 	end
 
